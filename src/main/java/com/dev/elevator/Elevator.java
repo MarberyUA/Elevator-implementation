@@ -6,125 +6,125 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class Elevator {
-    private static List<Integer> moves;
-    private static int stage;
-    private static int moving; // moving : 1 = up ; -1 = down
-    private static int capacity;
-    private static List<List<Integer>> peopleOnFloorsLists;
-    private static List<Integer> inLift;
-    private static List<List<Integer>> outLift;
-    private static boolean PRINTING = true;
+    private int stage;
+    private int direction;
+    private int capacity;
+    private List<List<Integer>> peopleOnFloorsLists;
+    private List<Integer> inLift;
+    private List<Integer> moves;
 
-    private static List<List<Integer>> cstrStacks(final int[][] queues) {
-
-        List<List<Integer>> stks = new ArrayList<>();
-        for (int n = 0; n < queues.length; n++) {
-            stks.add(Arrays.stream(queues[n])
-                    .boxed()
-                    .collect(Collectors.toList()));
-        }
-        return stks;
+    public Elevator() {
+        stage = -1;
+        direction = 1;
+        capacity = 5;
     }
 
-    public static int[] theLift(final int[][] queues, final int inputCapacity) {
+    public Elevator(int inputCapacity) {
         stage = -1;
-        moving = 1;
-        capacity = inputCapacity;
-        peopleOnFloorsLists = cstrStacks(queues);
-        inLift = new ArrayList<>();
-        outLift = new ArrayList<>();
-        for (int i = 0; i < queues.length; i++) {
-            outLift.add(new ArrayList<>());
-        }
+        direction = 1;
+        capacity = inputCapacity > 0 ? inputCapacity : 1;
+    }
+
+    public void setCapacity(int newCapacity) {
+        capacity = newCapacity;
+    }
+
+    public int[] deliver(final int[][] queues) {
         moves = new ArrayList<>();
+        peopleOnFloorsLists = covertDimensionalArrayToList(queues);
+        inLift = new ArrayList<>();
         moves.add(0);
 
         while (isStillPeopleToBeLifted() || !liftIsEmpty()) {
-            stage += moving;
+            stage += direction;
             if (somePeopleInAreWantToGoOut() || someGuysWaitingSameWayAreAtThatFloor(stage)) {
                 liftStopAtThisStage();
                 somePeopleInAreGoOut();
                 takeInIfAllPeopleGoingTheSameWay();
             }
 
-            if (PRINTING) {
-                System.out.println("" + stage + " | Inside: " + inLift + " ; " + moves);
-            }
+            System.out.println("" + stage + " | Inside: " + inLift + " ; " + moves);
+
             /* Decide what the lift has to do now, considering that people inside have the priority:
-            *
-            * No change of direction in these cases :
-            * - If the lift contains people going in the same direction: They have the priority...
-            * - If there are people further that want to go in the same direction...
-            * - If the lift is Empty and that some people further want to go in the other direction,
-            *   the lift goes as far as it can before taking in some people again (who wana go to
-            *   in the other direction).
-            *
-            * In other cases, the lift begins to move the other way.
-            * For the simplicity of the implementation, the lift is shifted one step backward, so it
-            * will be able to managed the presence of people
-            * at the current floor (before update) who
-            * want to go in the other direction.
-            */
+             *
+             * No change of direction in these cases :
+             * - If the lift contains people going in the same direction: They have the priority...
+             * - If there are people further that want to go in the same direction...
+             * - If the lift is Empty and that some people further want
+             *   to go in the other direction, the lift goes as far as it can
+             *   before taking in some people again (who wanna go to in the other direction).
+             *
+             * In other cases, the lift begins to move the other way.
+             * For the simplicity of the implementation, the lift is shifted one step backward,
+             * so it will be able to managed the presence of people at the current floor
+             * (before update) who want to go in the other direction.
+             */
 
             if (!(anyPeopleInAreGoingSameWay()
                     || areSomeGuysFurtherWaitingForSameWay()
                     || (liftIsEmpty()
                     && areSomeGuysFurtherWantingForTheOtherWay()))) {
-                moving *= -1;
-                stage -= moving;
+                direction *= -1;
+                stage -= direction;
             }
         }
         liftStopAtThatStage(0); // return to the ground if needed
-        if (PRINTING) {
-            System.out.println("" + stage + " | Inside: " + inLift + " ; " + moves);
-        }
+        System.out.println("" + stage + " | Inside: " + inLift + " ; " + moves);
         return moves.stream().mapToInt(i -> i.intValue()).toArray();
     }
 
-    private static boolean isStillPeopleToBeLifted() {
+    private List<List<Integer>> covertDimensionalArrayToList(final int[][] queues) {
+        List<List<Integer>> list = new ArrayList<>();
+        for (int n = 0; n < queues.length; n++) {
+            list.add(Arrays.stream(queues[n])
+                    .boxed()
+                    .collect(Collectors.toList()));
+        }
+        return list;
+    }
+
+    private boolean isStillPeopleToBeLifted() {
         return !peopleOnFloorsLists.stream().allMatch(l -> l.isEmpty());
     }
 
-    private static boolean liftIsEmpty() {
+    private boolean liftIsEmpty() {
         return inLift.isEmpty();
     }
 
-    private static boolean somePeopleInAreWantToGoOut() {
+    private boolean somePeopleInAreWantToGoOut() {
         return inLift.contains(stage);
     }
 
-    private static void somePeopleInAreGoOut() {
-        List<Integer> list = inLift.stream().filter(i -> i == stage).collect(Collectors.toList());
-        list.forEach(i -> outLift.get(stage).add(i));
+    private void somePeopleInAreGoOut() {
         inLift = inLift.stream().filter(i -> i != stage).collect(Collectors.toList());
     }
 
-    private static void liftStopAtThisStage() {
+    private void liftStopAtThisStage() {
         liftStopAtThatStage(stage);
     }
 
-    private static void liftStopAtThatStage(int lvl) {
+    private void liftStopAtThatStage(int lvl) {
         if (moves.get(moves.size() - 1) != lvl) {
             moves.add(lvl);
         }
     }
 
-    private static boolean anyPeopleInAreGoingSameWay() {
-        return inLift.stream().anyMatch(guy -> guy * moving > stage * moving);
+    private boolean anyPeopleInAreGoingSameWay() {
+        return inLift.stream().anyMatch(guy -> guy * direction > stage * direction);
     }
 
-    private static boolean areSomePeopleAtThisFloor(int lvl) {
+    private boolean areSomePeopleAtThisFloor(int lvl) {
         return !peopleOnFloorsLists.get(lvl).isEmpty();
     }
 
-    private static boolean someGuysWaitingSameWayAreAtThatFloor(int lvl) {
+    private boolean someGuysWaitingSameWayAreAtThatFloor(int lvl) {
         return areSomePeopleAtThisFloor(lvl)
                 && peopleOnFloorsLists.get(lvl)
                 .stream()
-                .anyMatch(i -> i * moving > lvl * moving);
+                .anyMatch(i -> i * direction > lvl * direction);
     }
 
-    private static void takeInIfAllPeopleGoingTheSameWay() {
+    private void takeInIfAllPeopleGoingTheSameWay() {
         List<Integer> peopleGoingIn = new ArrayList<>();
         List<Integer> peopleThere = peopleOnFloorsLists.get(stage);
 
@@ -134,7 +134,7 @@ public class Elevator {
             if (peopleGoingIn.size() + inLift.size() == capacity) {
                 break;
             }
-            if (peopleThere.get(n) * moving > stage * moving) {
+            if (peopleThere.get(n) * direction > stage * direction) {
                 peopleGoingIn.add(peopleThere.get(n));
             }
         }
@@ -147,9 +147,9 @@ public class Elevator {
     }
 
     // are some guys further
-    private static boolean areSomeGuysFurtherWaitingForSameWay() {
+    private boolean areSomeGuysFurtherWaitingForSameWay() {
 
-        for (int i = stage + moving; 0 <= i && i < peopleOnFloorsLists.size(); i += moving) {
+        for (int i = stage + direction; 0 <= i && i < peopleOnFloorsLists.size(); i += direction) {
             if (someGuysWaitingSameWayAreAtThatFloor(i)) {
                 return true;
             }
@@ -157,8 +157,8 @@ public class Elevator {
         return false;
     }
 
-    private static boolean areSomeGuysFurtherWantingForTheOtherWay() {
-        for (int i = stage + moving; 0 <= i && i < peopleOnFloorsLists.size(); i += moving) {
+    private boolean areSomeGuysFurtherWantingForTheOtherWay() {
+        for (int i = stage + direction; 0 <= i && i < peopleOnFloorsLists.size(); i += direction) {
             if (areSomePeopleAtThisFloor(i)) {
                 return true;
             }
