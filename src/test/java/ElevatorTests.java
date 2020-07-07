@@ -20,7 +20,7 @@ public class ElevatorTests {
                 new int[0],
                 new int[0],
         };
-        final int[] result = elevator.theLift(queues);
+        final int[] result = elevator.deliver(queues);
         assertArrayEquals(new int[]{0,2,5,0}, result);
     }
 
@@ -35,7 +35,7 @@ public class ElevatorTests {
                 new int[0],
                 new int[0],
         };
-        final int[] result = elevator.theLift(queues);
+        final int[] result = elevator.deliver(queues);
         assertArrayEquals(new int[]{0,2,1,0}, result);
     }
 
@@ -50,7 +50,7 @@ public class ElevatorTests {
                 new int[0],
                 new int[0],
         };
-        final int[] result = elevator.theLift(queues);
+        final int[] result = elevator.deliver(queues);
         assertArrayEquals(new int[]{0,1,2,3,4,5,0}, result);
     }
 
@@ -65,7 +65,7 @@ public class ElevatorTests {
                 new int[]{3},
                 new int[0],
         };
-        final int[] result = elevator.theLift(queues);
+        final int[] result = elevator.deliver(queues);
         assertArrayEquals(new int[]{0,5,4,3,2,1,0}, result);
     }
 
@@ -80,7 +80,7 @@ public class ElevatorTests {
                 new int[0],
                 new int[]{5},
         };
-        final int[] result = elevator.theLift(queues);
+        final int[] result = elevator.deliver(queues);
         assertArrayEquals(new int[]{0,1,2,3,6,5,3,2,0}, result);
     }
 
@@ -95,7 +95,7 @@ public class ElevatorTests {
                 new int[0],
                 new int[0],
         };
-        final int[] result = elevator.theLift(queues);
+        final int[] result = elevator.deliver(queues);
         assertArrayEquals(new int[]{0,1,2,3,4,0}, result);
     }
 
@@ -110,7 +110,7 @@ public class ElevatorTests {
                 new int[0],
                 new int[0],
         };
-        final int[] result = elevator.theLift(queues);
+        final int[] result = elevator.deliver(queues);
         assertArrayEquals(new int[]{0,3,0,3,0}, result);
     }
 
@@ -125,7 +125,7 @@ public class ElevatorTests {
                 new int[0],
                 new int[0],
         };
-        final int[] result = elevator.theLift(queues);
+        final int[] result = elevator.deliver(queues);
         assertArrayEquals(new int[]{0,3,1,3,1,3,1,0}, result);
     }
 
@@ -140,7 +140,7 @@ public class ElevatorTests {
                 new int[]{4,4,4,4,4,4},
                 new int[0],
         };
-        final int[] result = elevator.theLift(queues);
+        final int[] result = elevator.deliver(queues);
         assertArrayEquals(new int[]{0,3,5,4,0,3,5,4,0}, result);
     }
 
@@ -155,7 +155,7 @@ public class ElevatorTests {
                 new int[]{6,6,0,0,0,6},
                 new int[0],
         };
-        final int[] result = elevator.theLift(queues);
+        final int[] result = elevator.deliver(queues);
         assertArrayEquals(new int[]{0,1,5,6,5,1,0,1,0}, result);
     }
 
@@ -171,7 +171,7 @@ public class ElevatorTests {
                 new int[0],
         };
         elevator.setCapacity(1);
-        final int[] result = elevator.theLift(queues);
+        final int[] result = elevator.deliver(queues);
         elevator.setCapacity(5);
         assertArrayEquals(new int[]{0,1,2,3,1,2,3,2,3,0}, result);
     }
@@ -187,7 +187,7 @@ public class ElevatorTests {
                 new int[]{0,0,0,0},
                 new int[]{0,0,0,0},
         };
-        final int[] result = elevator.theLift(queues);
+        final int[] result = elevator.deliver(queues);
         assertArrayEquals(new int[]{0,6,5,4,3,2,1,0,5,4,3,2,1,0,4,3,2,1,0,3,2,1,0,1,0}, result);
     }
 
@@ -202,7 +202,7 @@ public class ElevatorTests {
                 new int[0],
                 new int[0],
         };
-        final int[] result = elevator.theLift(queues);
+        final int[] result = elevator.deliver(queues);
         assertArrayEquals(new int[]{0}, result);
     }
 
@@ -221,7 +221,7 @@ public class ElevatorTests {
                 new int[0]
         };
         elevator.setCapacity(9);
-        final int[] result = elevator.theLift(queues);
+        final int[] result = elevator.deliver(queues);
         elevator.setCapacity(5);
         assertArrayEquals(new int[]{0, 1, 3, 4, 5, 6, 7, 8, 7, 5, 4, 3, 2, 1, 0}, result);
     }

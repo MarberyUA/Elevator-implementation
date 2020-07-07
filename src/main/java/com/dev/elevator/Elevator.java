@@ -29,7 +29,7 @@ public class Elevator {
         capacity = newCapacity;
     }
 
-    public int[] theLift(final int[][] queues) {
+    public int[] deliver(final int[][] queues) {
         moves = new ArrayList<>();
         peopleOnFloorsLists = covertDimensionalArrayToList(queues);
         inLift = new ArrayList<>();
