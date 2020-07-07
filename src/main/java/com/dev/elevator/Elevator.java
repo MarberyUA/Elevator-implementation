@@ -50,15 +50,14 @@ public class Elevator {
              * No change of direction in these cases :
              * - If the lift contains people going in the same direction: They have the priority...
              * - If there are people further that want to go in the same direction...
-             * - If the lift is Empty and that some people further want to go in the other direction,
-             *   the lift goes as far as it can before taking in some people again (who wana go to
-             *   in the other direction).
+             * - If the lift is Empty and that some people further want
+             *   to go in the other direction, the lift goes as far as it can
+             *   before taking in some people again (who wanna go to in the other direction).
              *
              * In other cases, the lift begins to move the other way.
-             * For the simplicity of the implementation, the lift is shifted one step backward, so it
-             * will be able to managed the presence of people
-             * at the current floor (before update) who
-             * want to go in the other direction.
+             * For the simplicity of the implementation, the lift is shifted one step backward,
+             * so it will be able to managed the presence of people at the current floor
+             * (before update) who want to go in the other direction.
              */
 
             if (!(anyPeopleInAreGoingSameWay()
